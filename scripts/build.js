@@ -54,7 +54,7 @@ async function app() {
                         许可协议，转载请保留原始链接</p>
                 </div>`}
                 <div class="comment">
-                    <a href="https://github.com/wangsijie/blog/issues/${post.number}">发表评论</a>
+                    <a href="https://github.com/wangsijie/blog/issues/${post.number}#issue-comment-box">发表评论</a>
                 </div>
             </article>
         </div>`;
