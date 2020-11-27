@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: curl https://api.vercel.com/v1/integrations/deploy/prj_TTtwS9LWS46dB4lZjUvWJSxBdR5i/WoioULqgIq
+    - run: curl https://api.vercel.com/v1/integrations/deploy/prj_TTtwS9LWS46dB4lZjUvWJSxBdR5i/${{ secrets.DEPLOY_HOOK }}
