@@ -25,8 +25,8 @@ async function getPosts() {
     }
     return items.map(item => {
         const content = item.body;
-        const index1 = content.indexOf('---');
-        const index2 = content.substr(index1 + 3).indexOf('---') + index1 + 3;
+        const index1 = content.indexOf('```');
+        const index2 = content.substr(index1 + 3).indexOf('```') + index1 + 3;
         const metaString = content.substr(index1 + 4, index2 - (index1 + 4));
         const metaData = YAML.parse(metaString);
         const markdownContent = content.substr(index2 + 4);
