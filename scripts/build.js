@@ -8,8 +8,8 @@ const converter = new showdown.Converter({ tables: true, extensions: [showdownHi
 
 async function app() {
     fs.mkdirSync('build/posts', { recursive: true });
-    const posts = await getPosts();
-    // const posts = JSON.parse(fs.readFileSync('data.json', { encoding: 'utf-8' }));
+    // const posts = await getPosts();
+    const posts = JSON.parse(fs.readFileSync('data.json', { encoding: 'utf-8' }));
 
     const header = fs.readFileSync('layout/header.html', { encoding: 'utf-8' });
     const footer = fs.readFileSync('layout/footer.html', { encoding: 'utf-8' });
@@ -32,6 +32,17 @@ async function app() {
         const tagsContent = tags && tags.length ? `<span class="tag">
                 标签 ${tags.map(tag => `#${tag}`).join(' ')}
             </span>` : '';
+        const comments = post.comments.map(comment => `<li>
+            <div class="comment-header">
+                <a target="_blank" href="${comment.link}">${comment.name}</a>
+                在
+                ${moment(comment.createdAt).format('YYYY/MM/DD')}
+                发表评论：
+            </div>
+            <div class="markdown-body">
+                ${converter.makeHtml(comment.body)}
+            </div>
+        </li>`).join('');
         const content = `<div>
             <article id="post-${post.number}" itemscope itemprop="blogPost">
                 <h1 class="article-title">
@@ -56,6 +67,9 @@ async function app() {
                 <div class="comment">
                     <a href="https://github.com/wangsijie/blog/issues/${post.number}#issue-comment-box">发表评论</a>
                 </div>
+                <ul class="comments">
+                    ${comments}
+                </ul>
             </article>
         </div>`;
         if (isPage) {

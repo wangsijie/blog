@@ -89,6 +89,14 @@ li.post a {
 .post .comment {
     margin: 16px 0;
 }
+.post .comments li {
+    margin-bottom: 16px;
+}
+.post .comments li .comment-header {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 8px;
+}
 
 footer {
     font-size: 12px;

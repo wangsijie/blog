@@ -1,5 +1,6 @@
-const YAML = require('yaml');
 const axios = require('axios');
+const { getPostComments } = require('./get-post-comments');
+const { parseIssue } = require('./parse-issue');
 const TOKEN = process.env.GITHUB_TOKEN;
 
 async function getPosts() {
@@ -23,23 +24,19 @@ async function getPosts() {
         }
         page = Number(pageSearch[1]);
     }
-    return items.map(item => {
-        const content = item.body;
-        const index1 = content.indexOf('```');
-        const index2 = content.substr(index1 + 3).indexOf('```') + index1 + 3;
-        const metaString = content.substr(index1 + 4, index2 - (index1 + 4));
-        const metaData = YAML.parse(metaString);
-        const markdownContent = content.substr(index2 + 4);
-        return {
-            number: item.number,
-            title: item.title,
-            labels: item.labels,
-            createdAt: item.created_at,
-            rawBody: item.body,
-            metaData,
-            markdownContent,
-        };
-    });
+    const posts = [];
+    for (const item of items) {
+        let comments = [];
+        if (item.comments) {
+            comments = await getPostComments(item.number);
+        }
+        posts.push(parseIssue(item, comments));
+    }
+    return posts;
 }
 
 module.exports = getPosts;
+
+if (typeof require !== 'undefined' && require.main === module) {
+    getPosts().then(posts => require('fs').writeFileSync('data.json', JSON.stringify(posts, null, 2)))
+}
