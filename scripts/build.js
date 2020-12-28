@@ -8,8 +8,8 @@ const converter = new showdown.Converter({ tables: true, extensions: [showdownHi
 
 async function app() {
     fs.mkdirSync('build/posts', { recursive: true });
-    // const posts = await getPosts();
-    const posts = JSON.parse(fs.readFileSync('data.json', { encoding: 'utf-8' }));
+    const posts = await getPosts();
+    // const posts = JSON.parse(fs.readFileSync('data.json', { encoding: 'utf-8' }));
 
     const header = fs.readFileSync('layout/header.html', { encoding: 'utf-8' });
     const footer = fs.readFileSync('layout/footer.html', { encoding: 'utf-8' });
