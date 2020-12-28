@@ -7,6 +7,7 @@ async function getPosts() {
     const items = [];
     let page = 1;
     while(true) {
+        console.log('fetch posts, page: ' + page);
         const res = await axios.get(
             'https://api.github.com/repos/wangsijie/blog/issues',
             {
@@ -24,10 +25,12 @@ async function getPosts() {
         }
         page = Number(pageSearch[1]);
     }
+    console.log('fetched posts count:' + items.length);
     const posts = [];
     for (const item of items) {
         let comments = [];
         if (item.comments) {
+            console.log('fetch comments for:' + item.number);
             comments = await getPostComments(item.number);
         }
         posts.push(parseIssue(item, comments));
