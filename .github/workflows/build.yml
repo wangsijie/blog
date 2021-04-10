@@ -3,6 +3,9 @@ name: Build
 on:
   issues:
     types: [closed, edited, deleted]
+  push:
+    branches:
+    - master
 
 jobs:
   build:
@@ -10,4 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: curl https://api.vercel.com/v1/integrations/deploy/prj_TTtwS9LWS46dB4lZjUvWJSxBdR5i/${{ secrets.DEPLOY_HOOK }}
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v2
+    - name: yarn install
+      run: yarn install
+    - name: build
+      run: yarn build
+    - name: build docker
+      run: docker build -t ghcr.io/wangsijie/blog .
+    - name: docker login
+      run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u wangsijie --password-stdin
+    - name: docker push
+      run: docker push ghcr.io/wangsijie/blog
+    - name: deploy
+      run: curl https://cs.console.aliyun.com/hook/trigger?token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVzdGVySWQiOiJjOTUwZjU3YjMzNjJmNDExY2E2NzUzZDI4YjNmNjg3NGUiLCJpZCI6IjEyMDQzMSJ9.FcSXpC0Lx2JGTSJSEQuzE9bXxosSVH5or_eygjGtF8K2ZJDx8PDlfbkXcqFAM72QRFbl5SLxgb9h02P4avPqR5AAm8fcBGT5sAl9ubIQ4kMGOFFIfUYYLVVChjeokq2M-O5fZsG0zEF8HxnBSCuM581clwAyCdOZGDdM-ifuc5M

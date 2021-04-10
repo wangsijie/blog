@@ -4,6 +4,10 @@ const { parseIssue } = require('./parse-issue');
 const TOKEN = process.env.GITHUB_TOKEN;
 
 async function getPosts() {
+    if (!TOKEN) {
+        throw new Error('GITHUB_TOKEN is missing');
+    }
+    console.log(`use token: ${TOKEN.substr(0, 6)}********`);
     const items = [];
     let page = 1;
     while(true) {

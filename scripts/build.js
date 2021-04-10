@@ -88,4 +88,7 @@ async function app() {
     });
 }
 
-app();
+app().catch(e => {
+    console.log(e.message);
+    process.exit(-1);
+})

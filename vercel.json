@@ -1,9 +1,0 @@
-{
-    "version": 2,
-    "redirects": [
-        { "source": "/ilovetile(.*)", "destination": "https://ilovetile.sijie.wang/$1" }
-    ],
-    "github": {
-        "silent": true
-    }
-}
