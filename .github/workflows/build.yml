@@ -19,6 +19,8 @@ jobs:
       run: yarn install
     - name: build
       run: yarn build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: build docker
       run: docker build -t ghcr.io/wangsijie/blog .
     - name: docker login
