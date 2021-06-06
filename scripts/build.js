@@ -12,7 +12,9 @@ async function app() {
     // const posts = JSON.parse(fs.readFileSync('data.json', { encoding: 'utf-8' }));
 
     const header = fs.readFileSync('layout/header.html', { encoding: 'utf-8' });
+    const headerContent = fs.readFileSync('layout/header-content.html', { encoding: 'utf-8' });
     const footer = fs.readFileSync('layout/footer.html', { encoding: 'utf-8' });
+    const footerContent = fs.readFileSync('layout/footer-content.html', { encoding: 'utf-8' });
 
     // index
     const postsContent = posts.filter(post => !post.labels.find(l => l.name === 'page')).reduce((prev, post) => {
@@ -23,6 +25,7 @@ async function app() {
 
     posts.forEach(post => {
         const isPage = post.labels.find(l => l.name === 'page');
+        const purePage = post.labels.find(l => l.name === 'purepage');
         const postPath = post.metaData.url || post.number;
         const postDate = moment(post.metaData.date || post.createdAt).format('YYYY/MM/DD');
         const categoryContent = post.metaData.categories ? `<span class="category">
@@ -64,25 +67,25 @@ async function app() {
                         <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
                         许可协议，转载请保留原始链接</p>
                 </div>`}
-                <div class="comment">
+                ${purePage ? '' : `<div class="comment">
                     <a href="https://github.com/wangsijie/blog/issues/${post.number}#issue-comment-box">发表评论</a>
                 </div>
                 <ul class="comments">
                     ${comments}
-                </ul>
+                </ul>`}
             </article>
         </div>`;
         if (isPage) {
             fs.mkdirSync(`build/${postPath}`, { recursive: true });
             fs.writeFileSync(
                 `build/${postPath}/index.html`,
-                `${header.replace('{{title}}', `${post.title} - `)}<div class="post">${content}</div>${footer}`,
+                `${header.replace('{{title}}', `${post.title} - `)}${purePage ? '' : headerContent}<div class="post">${content}</div>${purePage ? '' : footerContent}${footer}`,
             );
         } else {
             fs.mkdirSync(`build/posts/${postPath}`, { recursive: true });
             fs.writeFileSync(
                 `build/posts/${postPath}/index.html`,
-                `${header.replace('{{title}}', `${post.title} - `)}<div class="post">${content}</div>${footer}`,
+                `${header.replace('{{title}}', `${post.title} - `)}${headerContent}<div class="post">${content}</div>${footerContent}${footer}`,
             );
         }
     });
